@@ -1,0 +1,84 @@
+
+
+h1{
+  font-family: 'Ropa Sans';
+}
+
+.container{
+  text-align: center;
+}
+
+nav {
+    background-color: rgba(255, 0, 0);
+    display: flex;
+    flex-flow: row wrap;
+    border-radius: 4px;
+    justify-content: space-evenly;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+nav a {
+    color: rgb(255, 255, 255);
+}
+.squareImg {
+  width:200px;
+  height:200px
+}
+
+  .wrapper {
+    display:flex;
+    flex-direction: column;
+    font-family: ‘Segoe UI’, Candara, ‘Bitstream Vera Sans’, ‘DejaVu Sans’, ‘Bitsream Vera Sans’, ‘Trebuchet MS’, Verdana, ‘Verdana Ref’, sans-serif;
+    margin:10px;
+  }
+  
+  .title{
+    display: inline-block;
+    background-color: rgba(0,139, 139,0.8);
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin: 0;
+    margin-bottom: 5px;
+  }
+  
+  .default{
+    margin-bottom: 5px;
+  }
+
+  .about_section {
+    background-color: skyblue;
+    border: 1px dashed #000;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 20px 25px;
+  }
+  
+  .swiper-slide-container {
+    text-align: center;
+          font-size: 18px;
+          background: #fff;
+    height:100%;
+          max-width: 600px;
+    margin:auto;
+          /* Center slide text vertically */
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+          -webkit-box-pack: center;
+          -ms-flex-pack: center;
+          -webkit-justify-content: center;
+          justify-content: center;
+          -webkit-box-align: center;
+          -ms-flex-align: center;
+          -webkit-align-items: center;
+          align-items: center;
+  }
+
+  .swiper-container {
+    width: 100%;
+    height: 300px;
+    margin: 20px auto;
+}
+
