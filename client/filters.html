@@ -1,3 +1,4 @@
+<!-- melody ic3 html-->
 <html>
 
 <head>
@@ -8,19 +9,84 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
     <link rel="stylesheet" href="style/styles.css"/>
 </head>
 <body>
     <div class="container">
         <h1 class="header1">College Park Food Finder</h1>
     </div>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="addRestuarant.html">Add Restuarant</a>
-        <a href="filters.html">Filters</a>
-        <a href="restuarants.html">Restaurants</a>
-    </nav>
-</body>
+    <div class="wrapper">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="filters.html">Filters</a>
+            <a href="map.html">Map</a>
+            <a href="addressfilter.html">Search Restaurant</a>
+            <a href="view_num.html">Contact</a>
+        </nav>
+    </div>
 
+    <div class="left">
+        
+        <form class ="mainform">
+            <div class = "field">
+                <label>
+                    Takeout 
+                </label>
+                <input type="checkbox" name="takeout" id="takeout">
+            </div>
+            <div class = "field">
+                <label>
+                    Delivery 
+                </label>
+                <input type="checkbox" name="delivery" id="delivery">
+            </div>
+            <div class = "field">
+                <label>
+                    Drive Thru
+                </label>
+                <input type="checkbox" name="parking" id="drive_thru">
+            </div>
+            <div class = "control">
+                <button class = "button">
+                    submit
+                </button>
+            </div>
+        </form>
+        <table style="margin: 100px;background-color: aliceblue" class="table">
+            <!--First tr is the column headers-->
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Description</th>
+            
+            </tr>
+        </table>
+    </div>
+
+    <div class="right">
+        <table id="cuisineTable">
+            <tr>
+              <th>cuisine_id</th><th>cuisine</th><th>Checkbox</th>
+            </tr>
+        </table >
+        <br>
+        <div>
+            <button class = "submit" onclick="cuisineSubmit()">
+                submit
+            </button>
+        </div>
+        <br>
+        <div class="result">
+            <table id="resultTable">
+                <tr>
+                  <th>Restaurant Name</th><th>cuisine type</th>
+                </tr>
+            </table >
+        </div>
+    </div>
+
+    <script src="script/nickLoadScript.js"></script>
+    <script src = "loadtable.js"> </script>
+</body>
 </html>

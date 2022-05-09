@@ -1,14 +1,15 @@
+/* eslint-disable camelcase */
 import express from 'express';
 // import { restart } from 'nodemon';
 import sequelize from 'sequelize';
 
 import db from '../database/initializeDB.js';
 
-const restaurantQuery = 'SELECT * FROM restaurants';
+const restaurantQuery = 'SELECT * FROM restaurant LEFT JOIN restaurant_info USING(restaurant_id)';
 
 const router = express.Router();
 
-router.route('/').get(async (req, res) => {
+router.route('/restaurant').get(async (req, res) => {
   try {
     const restaurant = await db.sequelizeDB.query(restaurantQuery, {
       type: sequelize.QueryTypes.SELECT
@@ -21,9 +22,10 @@ router.route('/').get(async (req, res) => {
 });
 
 // get restaurant with id, /api/restaurantid#
-router.get('/:restaurant_id', async (req, res) => {
+router.get('/restaurant/:restaurant_id', async (req, res) => {
   // eslint-disable-next-line no-template-curly-in-string
-  const restaurantIDQuery = `SELECT * FROM restaurants WHERE restaurant_id = ${req.params.restaurant_id}`;
+  const restaurantIDQuery = `SELECT * FROM restaurant LEFT JOIN restaurant_info USING(restaurant_id)
+  WHERE restaurant_id = ${req.params.restaurant_id}`;
   try {
     const restaurant = await db.sequelizeDB.query(restaurantIDQuery, {
       type: sequelize.QueryTypes.SELECT
@@ -36,13 +38,14 @@ router.get('/:restaurant_id', async (req, res) => {
 });
 
 // post method for restaurant for adding a restaurant
-router.post('/restaurantpost', async (req, res) => {
+router.post('/restaurant/restaurantpost', async (req, res) => {
   try {
-    const result = await db.sequelizeDB.query(`INSERT INTO restaurants (restaurant_id, 
-      restaurant_name, phone_number, price, description, website, cuisine_id, rating_id, description_id)
-      values(${req.body.id}, '${req.body.restaurant_name}', '${req.body.phone_number}', '${req.body.price}',
-      '${req.body.description}', '${req.body.website}', ${req.body.cuisine_id}, ${req.body.rating_id},
-      ${req.body.description_id})`
+    const result = await db.sequelizeDB.query(`INSERT INTO restaurant (restaurant_id, 
+      restaurant_info_id, restaurant_name, location_id, open_time, close_time, reservation, phonne_number,
+      payment_id)
+      values(${req.body.restaurant_id}, ${req.body.restaurant_info_id},'${req.body.restaurant_name}', ${req.body.location_id},
+      '${req.body.open_time}', '${req.body.close_time}', ${req.body.reservation}, '${req.body.phone_number}',
+      ${req.body.payment_id})` 
     );
     res.send('Something was added.');
   } catch (err) {
@@ -52,12 +55,13 @@ router.post('/restaurantpost', async (req, res) => {
 });
 
 // for updating an entry
-router.put('/restaurantput', async (req, res) => {
+router.put('/restaurant/restaurantput', async (req, res) => {
   try {
-    const put = await db.sequelizeDB.query(`UPDATE restaurants SET restaurant_name = '${req.body.restaurant_name}', 
-    phone_number = '${req.body.phone_number}', price = '${req.body.price}',
-    description = '${req.body.description}', website = '${req.body.website}', cuisine_id = ${req.body.cuisine_id},
-    rating_id = ${req.body.rating_id}, description_id = ${req.body.description_id} WHERE restaurant_id = ${req.body.id}`
+    const put = await db.sequelizeDB.query(`UPDATE restaurant SET restaurant_info_id = ${restaurant_info_id}, 
+    restaurant_name = '${req.body.restaurant_name}', 
+    location_id = ${req.body.location_id}, open_time = '${req.body.open_time}', close_time = '${req.body.close_time}', 
+    reservation = ${req.body.reservation}, phone_number = '${req.body.phone_number}', payment_id = ${req.body.payment_id}
+    WHERE restaurant_id = ${req.body.restaurant_id}`
     );
     res.send('Successfully Updated');
   } catch (err) {
@@ -67,10 +71,11 @@ router.put('/restaurantput', async (req, res) => {
 });
 
 // for deleting an entry
-router.delete('/restaurantdelete/:restaurant_id', async (req, res) => {
+router.delete('/restaurant/restaurantdelete/:restaurant_id', async (req, res) => {
   const {restaurant_id } = req.params
   console.log(restaurant_id);
-  const restaurantIDQuery = `DELETE FROM restaurants WHERE restaurant_id = ${restaurant_id}`;
+  const restaurantIDQuery = `DELETE FROM restaurant LEFT JOIN restaurant_info USING(restaurant_id)
+  WHERE restaurant_id = ${restaurant_id}`;
   try {
     const restaurant = await db.sequelizeDB.query(restaurantIDQuery, {
       type: sequelize.QueryTypes.DELETE

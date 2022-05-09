@@ -1,5 +1,5 @@
+<!-- ethan ic3 html-->
 <html>
-
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -26,13 +26,31 @@
         </nav>
     </div>
 
-    <div class="about_section">
-        <p class="default">
-            This database aims to help users looking for restaurants in the College Park, Maryland based on their food
-            preferences (i.e. Vegetarian, Cuisine). Users can browse the restaurants in the area, filter through them,
-            and even add their own restaurants that they find to the database.
-        </p>
+    <div class="center">
+        <form class="mainform">
+            <div class="field">
+                <label>
+                    Street
+                </label>
+                <input type="text" name="Street_Address" id="Street_Address">
+            </div>
+            <div class="control center">
+                <button class="button" style="text-align: center;">
+                    Submit
+                </button>
+            </div>
+        </form>
+    
+
+        <div class="restaurant_name">
+            <h2>Restaurants</h2>
+            <ul class="resto-list">
+
+            </ul>
+        </div>
     </div>
+    <script src="loadedscriptEthan.js"></script>
 </body>
 
 </html>
+

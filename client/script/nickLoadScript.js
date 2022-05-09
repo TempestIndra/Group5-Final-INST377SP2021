@@ -1,130 +1,114 @@
-//NEW CODE BELOW//
-function getRandomIntInclusive(min, max) {
-    const newMin = Math.ceil(min);
-    const newMax = Math.floor(max);
-    return Math.floor(Math.random() * (newMax - newMin + 1) + min);
-}
-function restoArrayMake(dataArray) {
-    // console.log('fired dataHandler');
-    // console.table(dataArray); // this is called "dot notation"
-    const range = [...Array(15).keys()];
-    const listItems = range.map((item, index) => {
-        const restNum = getRandomIntInclusive(0, dataArray.length - 1);
-        return dataArray[restNum];
-    });
+/* eslint-disable radix */
+/* eslint-disable no-plusplus */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-use-before-define */
+let mainCollection;
+let typeCollection;
+let infoCollection;
+let restCollection;
 
-    // console.log(listItems);
-    return listItems;
+function docReady(fn) {
+  // see if DOM is already available
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(fn, 1);
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
 }
-    const targetList = document.querySelector('.resto-list');
-    targetList.innerHTML = '';
-    collection.forEach((item) => {
-        const { restaurant_name } = item;
-        const displayName = restaurant_name.toLowerCase();
-        const injectThisItem = `<li>${displayName}</li>`;
-        targetList.innerHTML += injectThisItem;
-    });
-   
+
+docReady(() => {
+  fetch('api/cuisine')
+    .then((response) => response.json())
+    .then((data) => createHtmlList(data));
+
+  fetch('api/util/type')
+    .then((response) => response.json())
+    .then((data) => setter(data, 1));
+
+  fetch('api/util/info')
+    .then((response) => response.json())
+    .then((data) => setter(data, 2));
+
+    fetch('api/util/restaurant')
+    .then((response) => response.json())
+    .then((data) => setter(data, 3));
+});
+
+function setter (json, variable) {
+  if (variable === 1) {
+    typeCollection = json[0];
+  } else if(variable === 2) {
+    infoCollection = json[0];
+  } else{
+    restCollection = json[0];
+  }
 }
-async function mainEvent() {
-    // the async keyword means we can make API requests
-    console.log(document.querySelector('.mainform'));
-    const form = document.querySelector('.mainform');
-    const submit = document.querySelector('.button');
-    const address_1 = document.querySelector('#NewAddress');
-    // const zipcode = document.querySelector('#zipcode');
-    submit.style.display = 'none';
 
-    const results = await fetch('/ethan/address'); // This accesses some data from our API
-    const arrayFromJson = await results.json(); // This changes it into data we can use - an object
-    console.log(arrayFromJson);
-    if (arrayFromJson.length > 0) {
-        submit.style.display = 'block';
-        //let currentArray = [];
-        let currentArray = arrayFromJson;
-        console.log(currentArray.length)
-        address_1.addEventListener('input', async (event) => {
-            console.log(currentArray.length);
-            if (currentArray.length === 0) {
-                return;
-            }
-            console.log(event.target.value.toLowerCase())
-            const selectResto = currentArray.filter((item) => {
-                console.log(item.address_1)
-                const lowerName = item.address_1.toLowerCase();
-                const lowerValue = event.target.value.toLowerCase();
-                return lowerName.includes(lowerValue);
-            });
+function createHtmlList(collection) {
+  output = document.getElementById('cuisineTable');
+  mainCollection = collection[0];
+  let tableContent = '<tr><th>cuisine_id</th><th>cuisine</th><th>Checkbox</th></tr>';
 
-        console.log(selectResto);
-            createHtmlList(selectResto);
-        });
-        form.addEventListener('submit', async (submitEvent) => {
-            // async has to be declared all the way to get an await
-            submitEvent.preventDefault(); // This prevents your page from refreshing!
-            // console.log('form submission'); // this is substituting for a "breakpoint"
-            // arrayFromJson.data - we're accessing a key called 'data' on the returned object
-            // it contains all 1,000 records we need
-            currentArray = restoArrayMake(arrayFromJson.data);
-            console.log(currentArray);
-            createHtmlList(currentArray);
-        });
+  for (i = 0; i < collection[0].length; i++) {
+    tableContent += `<tr><td>${collection[0][i].type_id}</td>`
+      + `<td>${collection[0][i].type}</td>`
+      + `<td><input type='checkbox' id=${collection[0][i].type_id}></td></tr>`;
+  }
+  output.innerHTML = tableContent;
+}
+
+async function cuisineSubmit() {
+  const collection = [];
+  for (i = 0; i < mainCollection.length; i++) {
+    const check = document.getElementById(mainCollection[i].type_id);
+
+    if (check.checked === true) {
+      collection.push({
+        type_id: parseInt(mainCollection[i].type_id),
+        type: String(mainCollection[i].type)
+      });
     }
+  }
+
+  output = document.getElementById('resultTable');
+  let tableContent = '<th>Restaurant Name</th><th>cuisine type</th>';
+  let infoList = [];
+  let returantListID = [];
+
+  for (i = 0; i < collection.length; i++) {
+    for (j = 0; j < typeCollection.length; j++) {
+      if (collection[i].type_id === typeCollection[j].type_id) {
+        returantListID.push({
+          restaurant_info_id: parseInt(typeCollection[j].restaurant_info_id),
+          type_id: parseInt(typeCollection[j].type_id),
+          type: String(collection[i].type)
+        });
+      }
+    }
+  }
+
+  for (i = 0; i < returantListID.length; i++) {
+    for (j = 0; j < infoCollection.length; j++) {
+      if (returantListID[i].restaurant_info_id === infoCollection[j].restaurant_info_id) {
+        infoList.push({
+          restaurant_info_id: parseInt(infoCollection[j].restaurant_info_id),
+          restaurant_id: parseInt(infoCollection[j].restaurant_id),
+          type: String(returantListID[i].type)
+        });
+      }
+    }
+  }
+    for (i = 0; i < infoList.length; i++) {
+      for (j = 0; j < restCollection.length; j++) {
+        
+        if (infoList[i].restaurant_id === restCollection[j].restaurant_id) {
+          // console.log("here");
+          // console.log(infoList[i]);
+          tableContent += `<tr><td>${restCollection[j].restaurant_name}</td>
+          <td>${String(infoList[i].type)}</td></tr>`;
+
+        }
+      }
+    output.innerHTML = tableContent;
+  }
 }
-// this actually runs first! It's calling the function above
-document.addEventListener('DOMContentLoaded', async () => mainEvent())
-/* eslint-disable no-console */
-
-
-import express from 'express';
-import sequelize from 'sequelize';
-
-import db from '../database/initializeDB.js';
-
-const router = express.Router();
-
-const addressQuery = 'SELECT * FROM restaurants LEFT JOIN address using (restaurant_id)';
-
-router.route('/address').get(async (req, res) => {
-  try {
-    const address = await db.sequelizeDB.query(addressQuery, {
-      type: sequelize.QueryTypes.SELECT
-    });
-    res.json(address);
-  } catch (err) {
-    console.error(err);
-    res.json({message: 'Server error'});
-  }
-});
-From Ethan Trong-Khang Do to Everyone 09:47 PM
-// get address with id, /api/addressid#
-router.get('/:address_id', async (req, res) => {
-  // eslint-disable-next-line no-template-curly-in-string
-  const addressIDQuery = `SELECT * FROM address WHERE address_id = ${req.params.address_id}`;
-  try {
-    const address = await db.sequelizeDB.query(addressIDQuery, {
-      type: sequelize.QueryTypes.SELECT
-    });
-    res.json(address);
-  } catch (err) {
-    console.error(err);
-    res.json({message: 'Server error'});
-  }
-});
-// post method for address for adding a address
-router.post('/addresspost', async (req, res) => {
-  try {
-    const result = await db.sequelizeDB.query(`INSERT INTO address (address_id, 
-      address_1, address_2, city, state, zip_code, restaurant_id)
-      values(${req.body.address_id}, '${req.body.address_1}', '${req.body.address_2}', '${req.body.city}',
-      '${req.body.state}', '${req.body.zip_code}', ${req.body.restaurant_id})`
-    );
-    res.send('Something was added.');
-  } catch (err) {
-    console.log(err);
-    res.send({message: err})
-  }
-});
-From Ethan Trong-Khang Do to Everyone 09:47 PM
-});
-///ENDPOINTS
